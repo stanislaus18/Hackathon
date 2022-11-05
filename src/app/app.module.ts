@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AggregatedDataModule } from 'projects/aggregated-data/src/public-api';
 import { MultiDataModule } from 'projects/multi-data/src/public-api';
 import { SocketsModule } from 'projects/sockets/src/public-api';
+import { ForgeModule } from 'projects/forge/src/public-api';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { SocketsModule } from 'projects/sockets/src/public-api';
     HttpClientModule,
     AggregatedDataModule,
     MultiDataModule,
-    SocketsModule
+    SocketsModule,
+    ForgeModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

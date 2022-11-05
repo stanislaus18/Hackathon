@@ -30,7 +30,7 @@ export class MultiDataComponent implements OnInit {
       }
     },
     title: {
-      text: 'Dynamic Data & Time Axis'
+      text: 'Live : Electric consumption data '
     },
     toolbox: {
       feature: {

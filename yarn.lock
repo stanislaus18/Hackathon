@@ -1619,6 +1619,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/forge-viewer@^7.69.4":
+  version "7.69.4"
+  resolved "https://registry.yarnpkg.com/@types/forge-viewer/-/forge-viewer-7.69.4.tgz#be394a0a7f8567baf09563747e8170263edb4c7e"
+  integrity sha512-Jo/xCuILNRUt04lQTJXyDYGco9RXHV+Tocy0LQ6HNYvRaU++LR4L8plK2+Wp8KtN5BiFNc/4hq9qHWOxUpnpcg==
+
 "@types/http-proxy@^1.17.8":
   version "1.17.9"
   resolved "https://registry.yarnpkg.com/@types/http-proxy/-/http-proxy-1.17.9.tgz#7f0e7931343761efde1e2bf48c40f02f3f75705a"
@@ -4628,6 +4633,13 @@ ng-packagr@^14.2.0:
     stylus "^0.59.0"
   optionalDependencies:
     esbuild "^0.15.0"
+
+ng2-adsk-forge-viewer@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/ng2-adsk-forge-viewer/-/ng2-adsk-forge-viewer-1.6.0.tgz#d3d02862a840082e43349a84892fbaf2b568378b"
+  integrity sha512-0RLL7d3eREW1dDkqp8/44exv4K4+9+U7U4gUumEQQ+SpHIHGlbYGg0Subw3q+dAGwQYD3mcbEvScz/m5zo23sQ==
+  dependencies:
+    tslib "^2.0.0"
 
 ngx-echarts@^14.0.0:
   version "14.0.0"

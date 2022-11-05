@@ -39,7 +39,7 @@ export class OverviewComponent implements OnInit {
     },
     title: {
       left: 'center',
-      text: 'Large Area Chart'
+      text: 'Electricity Consumtion from past 7 days'
     },
     toolbox: {
       feature: {

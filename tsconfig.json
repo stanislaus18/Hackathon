@@ -20,6 +20,9 @@
       "aggregated-data": [
         "dist/aggregated-data"
       ],
+      "forge": [
+        "dist/forge"
+      ],
       "multi-data": [
         "dist/multi-data"
       ],

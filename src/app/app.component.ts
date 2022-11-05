@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { KtdGridLayout, ktdTrackById } from '@katoid/angular-grid-layout';
+import { SocketsService } from 'projects/sockets/src/public-api';
+
+const IOT_DATA = ['ENERGY', 'AC', 'TV', 'LIGHTS', 'FRIDGE'];
 
 @Component({
   selector: 'app-root',
@@ -20,4 +23,11 @@ export class AppComponent {
   trackById = ktdTrackById
 
   onLayoutUpdated(event : any) {}
+
+  constructor(private socketService: SocketsService) {}
+
+  ngOnInit() {
+    // initiate 
+    IOT_DATA.forEach(e => this.socketService.sendMessage(e));
+  }
 }

@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import * as echarts from 'echarts';
+import { SocketsService } from 'projects/sockets/src/public-api';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+interface IMultiGraphData {
+  name: string;
+  value: (string | number)[];
+}
+
+UntilDestroy()
 @Component({
   selector: 'lib-multi-data',
   templateUrl: './multi-data.component.html',
@@ -9,34 +16,15 @@ import * as echarts from 'echarts';
 })
 export class MultiDataComponent implements OnInit {
 
-  echarts1 = echarts;
-
-  private date: string[] = [];
-  private data: { name: string, value: (string | number)[] }[] = [];
-  private data1: { name: string, value: (string | number)[] }[] = [];
-
-  now = new Date(1997, 9, 3);
-  oneDay = 24 * 3600 * 1000;
-  value = Math.random() * 1000;
-
-  enable = true;
+  private energyData: IMultiGraphData[] = [];
+  private acData: IMultiGraphData[] = [];
+  private tvData: IMultiGraphData[] = [];
+  private fridgeData: IMultiGraphData[] = [];
+  private lightsData: IMultiGraphData[] = [];
 
   chartOption: EChartsOption = {
     tooltip: {
       trigger: 'axis',
-      // formatter: (params: { name: string, value: string[] }[]) => {
-      //   const param = params[0];
-      //   var date = new Date(param.name);
-      //   return (
-      //     date.getDate() +
-      //     '/' +
-      //     (date.getMonth() + 1) +
-      //     '/' +
-      //     date.getFullYear() +
-      //     ' : ' +
-      //     param.value[1]
-      //   );
-      // },
       axisPointer: {
         animation: false
       }
@@ -68,64 +56,131 @@ export class MultiDataComponent implements OnInit {
     },
     series: [
       {
-        name: 'Fake Data',
+        name: 'Current Electricity Consumption Data',
         type: 'line',
         showSymbol: false,
-        data: this.data,
+        data: this.energyData,
       },
       {
-        name: 'Fake Data',
+        name: 'Current AC Consumption',
         type: 'line',
         showSymbol: false,
-        data: this.data1,
-      }
+        data: this.acData,
+      },
+      {
+        name: 'Current TV Consumption',
+        type: 'line',
+        showSymbol: false,
+        data: this.tvData,
+      },
+      {
+        name: 'Current LIGHTS Consumption',
+        type: 'line',
+        showSymbol: false,
+        data: this.lightsData,
+      },
+      {
+        name: 'Current FRIDGE Consumption',
+        type: 'line',
+        showSymbol: false,
+        data: this.fridgeData,
+      },
     ]
   };
   echartsInstance: any;
+  enable = false;
 
-  randomData(data1 = false) {
-    this.now = new Date(+this.now + this.oneDay);
-    this.value = this.value + Math.random() * 21 - 10;
-    return {
-      name: this.now.toString(),
-      value: [
-        [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
-        data1 ? Math.round(this.value - 200) : Math.round(this.value)
-      ]
-    };
-  }
 
-  constructor() {
-    for (var i = 0; i < 1000; i++) {
-      this.data.push(this.randomData());
-      this.data1.push(this.randomData(true));
-    }
-  }
+  constructor(private socketsService: SocketsService) {}
 
   ngOnInit(): void {
-    setInterval(() => {
-      for (var i = 0; i < 5; i++) {
-        this.data.shift();
-        this.data1.shift();
-        this.data.push(this.randomData());
-        this.data1.push(this.randomData(true));
-      }
+    this.getDataViaSocket();
+  }
 
-      this.echartsInstance.setOption({
-        series: [
-          {
-            data: this.data
-          },
-          {
-            data: this.data1
-          }
-        ]
-      });
-    }, 1000);
+  setUpdatedData() {
+    this.echartsInstance?.setOption({
+      series: [
+        {
+          data: this.energyData
+        },
+        {
+          data: this.acData
+        },
+        {
+          data: this.tvData
+        },
+        {
+          data: this.lightsData
+        },
+        {
+          data: this.fridgeData
+        }
+      ]
+    });
   }
 
   onChartInit(ec: any) {
     this.echartsInstance = ec;
+  }
+
+  iotData(data: any): IMultiGraphData {
+    const date = new Date(data.timestamp);
+    return {
+      name: date.toISOString(),
+      value: [
+        [date.toISOString()].join('/'),
+        data.value
+      ]
+    };
+  }
+
+  getDataViaSocket() {
+    let eCount = 0;
+    let acCount = 0;
+    let tvCount = 0;
+    let fCount = 0;
+    let lCount = 0;
+
+    this.socketsService.getMessage('ENERGY')
+      //.pipe(untilDestroyed(this))
+      .subscribe((energyData) => {
+        eCount > 10 ? this.energyData.shift() : eCount++;
+        this.energyData.push(this.iotData(energyData));
+        this.setUpdatedData();
+        this.enable = true;
+      });
+
+    this.socketsService.getMessage('AC')
+      //.pipe(untilDestroyed(this))
+      .subscribe((acData) => {
+        acCount > 10 ? this.acData.shift() : acCount++;
+        this.acData.push(this.iotData(acData));
+        this.setUpdatedData();
+      });
+
+    this.socketsService.getMessage('TV')
+      //.pipe(untilDestroyed(this))
+      .subscribe((tvData) => {
+        tvCount > 10 ? this.tvData.shift() : tvCount++;
+        this.tvData.push(this.iotData(tvData));
+        this.setUpdatedData();
+      });
+
+    this.socketsService.getMessage('FRIDGE')
+      //.pipe(untilDestroyed(this))
+      .subscribe((fridgeData) => {
+        fCount > 10 ? this.fridgeData.shift() : fCount++;
+        this.fridgeData.push(this.iotData(fridgeData));
+        this.setUpdatedData();
+      });
+
+    this.socketsService.getMessage('LIGHTS')
+     // .pipe(untilDestroyed(this))
+      .subscribe((lightsData) => {
+        lCount > 10 ? this.lightsData.shift() : lCount++;
+        this.lightsData.push(this.iotData(lightsData));
+        this.setUpdatedData();
+      });
   }
 
 }

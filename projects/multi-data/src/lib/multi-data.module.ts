@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { SocketsModule } from 'projects/sockets/src/public-api';
 import { MultiDataComponent } from './multi-data.component';
 
 @NgModule({
@@ -11,6 +12,7 @@ import { MultiDataComponent } from './multi-data.component';
   imports: [
     CommonModule,
     HttpClientModule,
+    SocketsModule,
     NgxEchartsModule.forRoot({
       /**
        * This will import all modules from echarts.

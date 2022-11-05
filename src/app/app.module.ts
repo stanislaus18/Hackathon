@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AggregatedDataModule } from 'projects/aggregated-data/src/public-api';
 import { MultiDataModule } from 'projects/multi-data/src/public-api';
+import { SocketsModule } from 'projects/sockets/src/public-api';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MultiDataModule } from 'projects/multi-data/src/public-api';
     OverviewModule,
     HttpClientModule,
     AggregatedDataModule,
-    MultiDataModule
+    MultiDataModule,
+    SocketsModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

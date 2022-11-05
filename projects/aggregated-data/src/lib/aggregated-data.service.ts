@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class OverviewService {
+export class AggregatedDataService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getMonthlyData(): Observable<any> {
-    return this.httpClient.get<any>('http://localhost:5222/time-series');
+  getAggregatedData(time: string): Observable<any> {
+    return this.httpClient.get<any>(`http://localhost:5222/time-series/aggregatedData/${time}`);
   }
 }

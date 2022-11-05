@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { OverviewComponent } from './overview.component';
+import { AggregatedDataComponent } from './aggregated-data.component';
 
 @NgModule({
   declarations: [
-    OverviewComponent
+    AggregatedDataComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +21,7 @@ import { OverviewComponent } from './overview.component';
     }),
   ],
   exports: [
-    OverviewComponent
+    AggregatedDataComponent
   ]
 })
-export class OverviewModule { }
+export class AggregatedDataModule { }

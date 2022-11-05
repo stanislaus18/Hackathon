@@ -17,6 +17,12 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "paths": {
+      "aggregated-data": [
+        "dist/aggregated-data"
+      ],
+      "multi-data": [
+        "dist/multi-data"
+      ],
       "overview": [
         "dist/overview"
       ]

@@ -133,6 +133,68 @@
           }
         }
       }
+    },
+    "aggregated-data": {
+      "projectType": "library",
+      "root": "projects/aggregated-data",
+      "sourceRoot": "projects/aggregated-data/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/aggregated-data/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/aggregated-data/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/aggregated-data/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/aggregated-data/src/test.ts",
+            "tsConfig": "projects/aggregated-data/tsconfig.spec.json",
+            "karmaConfig": "projects/aggregated-data/karma.conf.js"
+          }
+        }
+      }
+    },
+    "multi-data": {
+      "projectType": "library",
+      "root": "projects/multi-data",
+      "sourceRoot": "projects/multi-data/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/multi-data/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/multi-data/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/multi-data/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/multi-data/src/test.ts",
+            "tsConfig": "projects/multi-data/tsconfig.spec.json",
+            "karmaConfig": "projects/multi-data/karma.conf.js"
+          }
+        }
+      }
     }
   }
 }

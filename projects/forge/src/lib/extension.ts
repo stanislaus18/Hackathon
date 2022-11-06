@@ -84,7 +84,7 @@ export class CustomExtension extends Extension {
             this.spaceColorChange([this.listOfRooms.find(e => e.name === data.name)] as any);
         } else {
             this.uncolor(uuid);
-            const index = this.selectionProxies.indexOf((e: any) => e.name === data.name);
+            const index = this.selectionProxies.map(e => e.name).indexOf(data.name);
             if (index > -1) { // only splice array when item is found
                 this.selectionProxies.splice(index, 1); // 2nd parameter means remove one item only
               }

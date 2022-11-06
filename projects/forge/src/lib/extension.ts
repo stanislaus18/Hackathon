@@ -3,7 +3,23 @@ import { fromEvent, Subject, takeUntil } from 'rxjs';
 import { ForgeService } from './forge.service';
 
 export class CustomExtension extends Extension {
-    dbIds = [5630, 5629, 5626, 5678];
+    dbIds = [5630, 5629, 5626, 5614, 5625, 5624, 5678, 5623, 5596, 5595, 5602, 5603];
+
+    listOfRooms = [
+        { name: 'AC_Room_1', color: [124, 252, 0], dbid: 5630 },
+        { name: 'AC_Room_2', color: [124, 252, 0], dbid: 5629 },
+        { name: 'AC_Room_3', color: [124, 252, 0], dbid: 5626 },
+        { name: 'TV_Room_1', color: [255, 0, 0], dbid: 5614 },
+        { name: 'TV_Room_2', color: [255, 0, 0], dbid: 5625 },
+        { name: 'TV_Room_3', color: [255, 0, 0], dbid: 5624 },
+        { name: 'Fridge_Room_1', color: [255, 255, 0], dbid: 5678 },
+        { name: 'Fride_Room_2', color: [255, 255, 0], dbid: 5623 },
+        { name: 'Fridge_Room_3', color: [255, 255, 0], dbid: 5596 },
+        { name: 'Light_Room_1', color: [30, 144, 255], dbid: 5595 },
+        { name: 'Light_Room_2', color: [30, 144, 255], dbid: 5602 },
+        { name: 'Light_Room_3', color: [30, 144, 255], dbid: 5603 }
+    ];
+
     public static override extensionName = 'CustomExtension';
     levelSelectorExtension: Autodesk.Viewing.Extension | undefined;
 
@@ -48,13 +64,32 @@ export class CustomExtension extends Extension {
 
     private changeRoomColors() {
 
-        this.forgeService.getMessage('AC').subscribe((d: boolean) => {
-            this.uncolor();
-            this.viewer.impl.invalidate(true);
+        this.forgeService.getMessage('AC').subscribe((data: any) => {
+            this.changeColor(data);
         });
-        this.forgeService.getMessage('TV').subscribe((d: boolean) => this.viewer.model.visibilityManager.setNodeOff(5629, d));
-        this.forgeService.getMessage('FRIDGE').subscribe((d: boolean) => this.viewer.model.visibilityManager.setNodeOff(5626, d));
-        this.forgeService.getMessage('LIGHTS').subscribe((d: boolean) => this.viewer.model.visibilityManager.setNodeOff(5678, d));
+        this.forgeService.getMessage('TV').subscribe((data: any) => {
+            this.changeColor(data);
+        });
+        this.forgeService.getMessage('FRIDGE').subscribe((data: any) => {
+            this.changeColor(data);
+        });
+        this.forgeService.getMessage('LIGHTS').subscribe((data: any) => {
+            this.changeColor(data);
+        });
+    }
+
+    private changeColor(data: any){
+        const uuid = this.selectionProxies.find(e => e.name === data.name)?.uuid;
+        if (data.value) {
+            this.spaceColorChange([this.listOfRooms.find(e => e.name === data.name)] as any);
+        } else {
+            this.uncolor(uuid);
+            const index = this.selectionProxies.indexOf((e: any) => e.name === data.name);
+            if (index > -1) { // only splice array when item is found
+                this.selectionProxies.splice(index, 1); // 2nd parameter means remove one item only
+              }
+        }
+        this.viewer.impl.invalidate(true);
     }
 
     getRooms() {
@@ -64,13 +99,7 @@ export class CustomExtension extends Extension {
 
         this.hideRooms();
 
-        this.spaceColorChange(
-            [
-                { name: 'Meeting Room 1 1.31', color: [124, 252, 0], dbid: 5630 },
-                { name: 'Meeting Room 1 1.31', color: [30, 144, 255], dbid: 5629 },
-                { name: 'Meeting Room 1 1.31', color: [255, 255, 0], dbid: 5626 },
-                { name: 'Meeting Room 1 1.31', color: [255, 0, 0], dbid: 5678 }
-            ]);
+       // this.spaceColorChange(this.listOfRooms);
 
         this.dbIds.forEach(d => this.viewer.model.visibilityManager.setNodeOff(d, false));
     }
@@ -130,12 +159,14 @@ export class CustomExtension extends Extension {
         });
     }
 
-    private uncolor() {
-        this.instanceTree.enumNodeFragments(5630, (frag: any) => {
-            // this part colors the rooms
-            const colorObj = new THREE.Color(`rgb(${124},252},0}`);
-            this.highlightFragment(this.viewer.model, frag, 5630, colorObj, { name: 'testing', number : '111'}, true);
-        });
+    private uncolor(uuid: string) {
+        this.selectionProxies
+        const object = this.viewer.impl.sceneAfter.getObjectByProperty('uuid', uuid) as any;
+        object.geometry?.dispose();
+        object.material?.dispose();
+        // scene.remove( object );
+
+        this.viewer.impl.sceneAfter.remove(object);
 
         this.viewer.impl.invalidate(true, true, true);
     }
